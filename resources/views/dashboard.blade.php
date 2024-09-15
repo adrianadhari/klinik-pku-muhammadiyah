@@ -1,5 +1,8 @@
 @extends('layout')
 @section('content')
+    @php
+        use Carbon\Carbon;
+    @endphp
     <div class="flex-grow container  mx-auto flex space-x-36 justify-center text-center items-center">
 
         <div class="w-1/3">
@@ -49,129 +52,146 @@
                     </form>
                     <div class="flex flex-col space-y-4 px-8">
                         <h1 class="text-4xl font-bold">Create Daily Report</h1>
-                        <div class="p-6 flex space-x-14">
-                            <div class="w-1/2">
-                                <div class="flex flex-col space-y-4">
-                                    <label class="form-control w-full max-w-xs">
-                                        <div class="label">
-                                            <span class="label-text text-lg font-bold">Status</span>
-                                        </div>
-                                        <select class="select border-[#A6C3BA] border-2">
-                                            <option>Lunas</option>
-                                            <option>Belum Lunas</option>
-                                        </select>
-                                    </label>
-                                    <div class="flex items-center text-start space-x-4">
-                                        <div>
-                                            <label for="tanggal_mulai" class="text-lg font-bold">Tanggal Mulai</label>
-                                            <input type="date" name="tanggal_mulai"
-                                                class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full"
-                                                id="tanggal_mulai">
-                                        </div>
-                                        <div>
-                                            <label for="tanggal_berakhir" class="text-lg font-bold">Tanggal Berakhir</label>
-                                            <input type="date" name="tanggal_berakhir" id="tanggal_berakhir"
-                                                class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full">
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center text-start space-x-4">
-                                        <div>
-                                            <label for="jam_mulai" class="text-lg font-bold">Jam Mulai</label>
-                                            <input type="time" name="jam_mulai" id="jam_mulai"
-                                                class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full">
-                                        </div>
-                                        <div>
-                                            <label for="jam_selesai" class="text-lg font-bold">Jam Selesai</label>
-                                            <input type="time" name="jam_selesai" id="jam_selesai"
-                                                class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full">
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center text-start space-x-4">
+                        <form action="{{ route('export') }}" method="POST">
+                            @csrf
+                            <div class="p-6 flex space-x-14">
+                                <div class="w-1/2">
+                                    <div class="flex flex-col space-y-4">
                                         <label class="form-control w-full max-w-xs">
                                             <div class="label">
-                                                <span class="label-text text-lg font-bold">Poli</span>
+                                                <span class="label-text text-lg font-bold">Status</span>
                                             </div>
-                                            <select class="select border-[#A6C3BA] border-2">
-                                                <option>Semua</option>
-                                                <option>Belum Lunas</option>
+                                            <select class="select border-[#A6C3BA] border-2" name="status" required>
+                                                <option value="Semua" selected>Semua</option>
+                                                <option value="Lunas">Lunas</option>
+                                                <option value="Belum Lunas">Belum Lunas</option>
                                             </select>
                                         </label>
-                                        <label class="form-control w-full max-w-xs">
-                                            <div class="label">
-                                                <span class="label-text text-lg font-bold">Tenaga Medis</span>
+                                        <div class="flex items-center text-start space-x-4">
+                                            <div>
+                                                <label for="tanggal_mulai" class="text-lg font-bold">Tanggal Mulai</label>
+                                                <input type="date" name="tanggal_mulai"
+                                                    class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full"
+                                                    id="tanggal_mulai" required max={{ Carbon::now()->format('Y-m-d') }} value="2024-08-20">
                                             </div>
-                                            <select class="select border-[#A6C3BA] border-2">
-                                                <option>Semua</option>
-                                                <option>Belum Lunas</option>
-                                            </select>
-                                        </label>
+                                            <div>
+                                                <label for="tanggal_berakhir" class="text-lg font-bold">Tanggal
+                                                    Berakhir</label>
+                                                <input type="date" name="tanggal_berakhir" id="tanggal_berakhir"
+                                                    class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full" required
+                                                    max={{ Carbon::now()->format('Y-m-d') }} value="2024-08-20">
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center text-start space-x-4">
+                                            <div>
+                                                <label for="jam_mulai" class="text-lg font-bold">Jam Mulai</label>
+                                                <input type="time" name="jam_mulai" id="jam_mulai"
+                                                    class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full" required
+                                                    value="08:00">
+                                            </div>
+                                            <div>
+                                                <label for="jam_selesai" class="text-lg font-bold">Jam Selesai</label>
+                                                <input type="time" name="jam_selesai" id="jam_selesai"
+                                                    class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full" required
+                                                    value="22:00">
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center text-start space-x-4">
+                                            <label class="form-control w-full max-w-xs">
+                                                <div class="label">
+                                                    <span class="label-text text-lg font-bold">Poli</span>
+                                                </div>
+                                                <select class="select border-[#A6C3BA] border-2" name="poli" required>
+                                                    <option value="Semua" selected>Semua</option>
+                                                    @foreach($polies as $poly)
+                                                    <option value="{{ $poly->poli }}">{{ $poly->poli }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </label>
+                                            <label class="form-control w-full max-w-xs">
+                                                <div class="label">
+                                                    <span class="label-text text-lg font-bold">Tenaga Medis</span>
+                                                </div>
+                                                <select class="select border-[#A6C3BA] border-2" name="tenaga_medis"
+                                                    required>
+                                                    <option value="Semua" selected>Semua</option>
+                                                    @foreach ($doctors as $doctor)
+                                                    <option value="{{ $doctor->tenaga_medis }}">{{ $doctor->tenaga_medis }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="w-1/2">
-                                <div class="flex flex-col space-y-4">
-                                    <div class="flex items-center space-x-4 text-start">
-                                        <div>
-                                            <p class="text-lg font-bold">Jenis Laporan</p>
-                                            <div class="p-6 rounded-lg border-2 mt-2 border-[#A6C3BA]">
-                                                <div>
-                                                    <input type="radio" name="jenis_laporan">
-                                                    <label for="jenis_laporan" class="me-4">Rinci</label>
-                                                    <input type="radio" name="jenis_laporan">
-                                                    <label for="jenis_laporan">Rekap</label>
+                                <div class="w-1/2">
+                                    <div class="flex flex-col space-y-4">
+                                        <div class="flex items-center space-x-4 text-start">
+                                            <div>
+                                                <p class="text-lg font-bold">Jenis Laporan</p>
+                                                <div class="p-6 rounded-lg border-2 mt-2 border-[#A6C3BA]">
+                                                    <div>
+                                                        <input type="radio" name="jenis_laporan" id="jenis_laporan_rinci" value="Rinci" required>
+                                                        <label for="jenis_laporan_rinci" class="me-1">Rinci</label>
+                                                        <input type="radio" name="jenis_laporan" id="jenis_laporan_rekap" value="Rekap">
+                                                        <label for="jenis_laporan_rekap">Rekap</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="text-lg font-bold">For Accounting</p>
+                                                <div class="p-6 rounded-lg border-2 mt-2 border-[#A6C3BA]">
+                                                    <div>
+                                                        <input type="radio" name="jenis_laporan" id="for_accounting_rinci" value="Accounting Rinci">
+                                                        <label for="for_accounting_rinci" class="me-1">Rinci</label>
+                                                        <input type="radio" name="jenis_laporan" id="for_accounting_rekap" value="Accounting Rekap">
+                                                        <label for="for_accounting_rekap">Rekap</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <p class="text-lg font-bold">Accounting</p>
-                                            <div class="p-6 rounded-lg border-2 mt-2 border-[#A6C3BA]">
-                                                <div>
-                                                    <input type="radio" name="jenis_laporan">
-                                                    <label for="jenis_laporan" class="me-4">Rinci</label>
-                                                    <input type="radio" name="jenis_laporan">
-                                                    <label for="jenis_laporan">Rekap</label>
-                                                </div>
+                                        <label class="form-control w-full max-w-xs">
+                                            <div class="label">
+                                                <span class="label-text text-lg font-bold">Metode Pembayaran</span>
                                             </div>
-                                        </div>
+                                            <select class="select border-[#A6C3BA] border-2" name="metode_pembayaran"
+                                                required>
+                                                <option value="Semua">Semua</option>
+                                                <option value="Tunai Langsung">Tunai Langsung</option>
+                                                <option value="BPJS">BPJS</option>
+                                                <option value="Yayasan Insantama Perusahaan">Yayasan Insantama Perusahaan</option>
+                                            </select>
+                                        </label>
+                                        <label class="form-control w-full max-w-xs">
+                                            <div class="label">
+                                                <span class="label-text text-lg font-bold">Penanggung Jawab</span>
+                                            </div>
+                                            <select class="select border-[#A6C3BA] border-2" name="penanggung_jawab"
+                                                required>
+                                                <option value="Semua">Semua</option>
+                                                @foreach ($responsibles as $responsible)
+                                                <option value="{{ $responsible->penanggung_jawab }}">{{ $responsible->penanggung_jawab }}</option>
+                                                @endforeach
+                                            </select>
+                                        </label>
                                     </div>
-                                    <div class="flex flex-col space-y-2 text-start">
-                                        <p class="text-lg font-bold">Metode Pembayaran</p>
-                                        <div>
-                                            <input type="radio" name="metode_pembayaran">
-                                            <label for="cash">Cash</label>
-                                        </div>
-                                        <div>
-                                            <input type="radio" name="metode_pembayaran">
-                                            <label for="cash">Kredit</label>
-                                        </div>
-                                    </div>
-                                    <label class="form-control w-full max-w-xs">
-                                        <div class="label">
-                                            <span class="label-text text-lg font-bold">Penanggung Jawab</span>
-                                        </div>
-                                        <select class="select border-[#A6C3BA] border-2">
-                                            <option>Semua</option>
-                                            <option>Belum Lunas</option>
-                                        </select>
-                                    </label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex items-center justify-center space-x-8">
-                            <button type="submit" class="px-9 py-4 rounded-md shadow border text-[#21A366]">
-                                <div class="flex space-x-2 items-center">
-                                    <img src="{{ asset('excel.png') }}" alt="">
-                                    <span>Create Excel</span>
-                                </div>
-                            </button>
-                            <button type="submit" class="px-9 py-4 rounded-md shadow border text-[#DD2025]">
+                            <div class="flex items-center justify-center space-x-8">
+                                <button type="submit" class="px-9 py-4 rounded-md shadow border text-[#21A366]">
+                                    <div class="flex space-x-2 items-center">
+                                        <img src="{{ asset('excel.png') }}" alt="">
+                                        <span>Create Excel</span>
+                                    </div>
+                                </button>
+                                {{-- <button type="submit" class="px-9 py-4 rounded-md shadow border text-[#DD2025]">
                                 <div class="flex space-x-2 items-center">
                                     <img src="{{ asset('pdf.png') }}" alt="">
                                     <span>Create PDF</span>
                                 </div>
-                            </button>
-                        </div>
+                            </button> --}}
+                            </div>
+                        </form>
                     </div>
                 </div>
             </dialog>

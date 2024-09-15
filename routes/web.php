@@ -13,5 +13,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/import', [DashboardController::class, 'import'])->name('import');
+    Route::post('/export', [DashboardController::class, 'export'])->name('export');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
