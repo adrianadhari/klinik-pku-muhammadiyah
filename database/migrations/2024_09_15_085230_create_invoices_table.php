@@ -18,6 +18,7 @@ return new class extends Migration
             $table->time('jam');
             $table->string('tenaga_medis');
             $table->string('poli');
+            $table->string('nama_pasien');
             $table->string('metode_pembayaran')->nullable();
             $table->enum('status', ['Lunas', 'Belum Lunas'])->nullable();
             $table->unsignedBigInteger('terbayar')->nullable();

@@ -43,7 +43,7 @@ class UsersImport implements ToCollection, WithHeadingRow
             // Simpan item terkait (asumsi ada kolom yang menunjukkan item barang/jasa di invoice)
             ItemInvoice::create([
                 'invoice_id' => $invoice->id,  // Mengaitkan item dengan invoice yang sesuai
-                'deskripsi' => $row['obat'],  // Nama barang/jasa yang ada dalam invoice
+                'deskripsi' => $row['obat'] . ' - ' . $row['prosedur'],  // Nama barang/jasa yang ada dalam invoice
                 'harga' => $harga,
                 'jumlah' => $row['jumlah'],
                 'diskon' => $row['diskon'],
