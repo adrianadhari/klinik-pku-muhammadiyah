@@ -162,32 +162,16 @@
     <hr style="border: 1px solid black; margin: 20px 0 0 0;">
     <table class="table-footer">
         <tr>
-            <td class="padding-right">Total Pasien</td>
-            <td>: {{ $grandTotalPasien }} Pasien</td>
-            <td class="padding-right" style="font-weight: bold">Total Harga</td>
+            <td style="font-weight: bold">Total Harga</td>
             <td style="font-weight: bold">: Rp. {{ $grandTotalHarga }}</td>
-            <td class="padding-right" style="font-weight: bold">Total Hutang</td>
+            <td style="font-weight: bold">Total Hutang</td>
             <td style="font-weight: bold">: Rp. {{ $grandTotalSisaHutang }}</td>
         </tr>
         <tr>
-            {{-- <td class="padding-right">Harga Tindakan</td>
-            <td>: Rp. 60.000</td> --}}
-            <td></td>
-            <td></td>
-            <td class="padding-right" style="font-weight: bold">Discount</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            {{-- <td class="padding-right">Total Harga Obat</td>
-            <td>: Rp. 256.000</td> --}}
-            <td></td>
-            <td></td>
-            <td class="padding-right" style="font-weight: bold">Total Terbayar</td>
+            <td style="font-weight: bold">Total Terbayar</td>
             <td style="font-weight: bold">: Rp. {{ $grandTotalTerbayar }}</td>
-            <td></td>
-            <td></td>
+            <td style="font-weight: bold">Discount</td>
+            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
         </tr>
     </table>
     <hr style="border: 1px solid black; margin: 20px 0 0 0;">

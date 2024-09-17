@@ -82,7 +82,7 @@
 </head>
 
 <body>
-    <h3 style="text-align: center;">LAPORAN PENERIMAAN KAS ACCOUNTING</h3>
+    <h3 style="text-align: center;">LAPORAN PENERIMAAN KAS RINCI</h3>
 
     <table class="table-header">
         <tr>
@@ -101,16 +101,15 @@
     <table>
         <thead>
             <tr>
+                <th>Tanggal</th>
                 <th>Poli</th>
-                <th>Tenaga Medis</th>
+                <th>Jam Kerja</th>
                 <th>No Invoice</th>
-                <th>Nama Pasien</th>
-                <th>Pembayaran</th>
                 <th>Total Harga</th>
                 <th>Diskon</th>
+                <th>Pembayaran</th>
                 <th>Terbayar</th>
                 <th>Sisa Hutang</th>
-                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -121,7 +120,7 @@
                 $grandTotalSisaHutang = 0;
                 $grandTotalPasien = 0;
             @endphp
-            @foreach ($invoices->groupBy('poli') as $poli => $data_poli)
+            @foreach ($invoices->groupBy('tanggal') as $tanggal => $data_poli)
                 @php
                     $subtotalHarga = 0; // Variabel untuk subtotal per poli
                     $subtotalDiskon = 0;
@@ -130,21 +129,20 @@
                     $totalPasienPoli = $data_poli->count();
                 @endphp
                 <tr>
-                    <td rowspan="{{ count($data_poli) }}">{{ $poli }}
+                    <td rowspan="{{ count($data_poli) }}">{{ $tanggal }}
                     </td>
                     @foreach ($data_poli as $index => $invoice)
                         @if ($index > 0)
                 <tr>
             @endif
-            <td>{{ $invoice->tenaga_medis }}</td>
+            <td>{{ $invoice->poli }}</td>
+            <td>{{ $invoice->jam }}</td>
             <td>{{ $invoice->no_invoice }}</td>
-            <td>{{ $invoice->nama_pasien }}</td>
-            <td>{{ $invoice->metode_pembayaran }}</td>
             <td>Rp. {{ $invoice->items->sum('total_harga') }}</td>
             <td>Rp. {{ $invoice->items->sum('diskon') }}</td>
+            <td>Rp. {{ $invoice->metode_pembayaran }}</td>
             <td>Rp. {{ $invoice->terbayar }}</td>
             <td>Rp. {{ $invoice->sisa_hutang }}</td>
-            <td>{{ $invoice->status }}</td>
 
             @php
                 // Hitung subtotal per poli
@@ -160,14 +158,12 @@
             @endforeach
             </tr>
             <tr>
-                <td colspan="3"><strong>SUBTOTAL:
-                        {{ $poli }}</strong></td>
-                <td colspan="2"><b>{{ $totalPasienPoli }} Pasien</b></td>
-                <td><b>Rp. {{ $subtotalHarga }}</b></td>
+                <td colspan="4"><strong>SUBTOTAL</strong></td>
+                <td><b>: Rp. {{ $subtotalHarga }}</b></td>
                 <td><b>Rp. {{ $subtotalDiskon }}</b></td>
+                <td></td>
                 <td><b>Rp. {{ $subtotalTerbayar }}</b></td>
                 <td><b>Rp. {{ $subtotalSisaHutang }}</b></td>
-                <td></td>
             </tr>
 
             @php
@@ -186,32 +182,16 @@
     <hr style="border: 1px solid black; margin: 20px 0 0 0;">
     <table class="table-footer">
         <tr>
-            <td class="padding-right">Total Pasien</td>
-            <td>: {{ $grandTotalPasien }} Pasien</td>
-            <td class="padding-right" style="font-weight: bold">Total Harga</td>
+            <td style="font-weight: bold">Total Harga</td>
             <td style="font-weight: bold">: Rp. {{ $grandTotalHarga }}</td>
-            <td class="padding-right" style="font-weight: bold">Total Hutang</td>
+            <td style="font-weight: bold">Total Hutang</td>
             <td style="font-weight: bold">: Rp. {{ $grandTotalSisaHutang }}</td>
         </tr>
         <tr>
-            {{-- <td class="padding-right">Harga Tindakan</td>
-            <td>: Rp. 60.000</td> --}}
-            <td></td>
-            <td></td>
-            <td class="padding-right" style="font-weight: bold">Discount</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            {{-- <td class="padding-right">Total Harga Obat</td>
-            <td>: Rp. 256.000</td> --}}
-            <td></td>
-            <td></td>
-            <td class="padding-right" style="font-weight: bold">Total Terbayar</td>
+            <td style="font-weight: bold">Total Terbayar</td>
             <td style="font-weight: bold">: Rp. {{ $grandTotalTerbayar }}</td>
-            <td></td>
-            <td></td>
+            <td style="font-weight: bold">Discount</td>
+            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
         </tr>
     </table>
     <hr style="border: 1px solid black; margin: 20px 0 0 0;">
