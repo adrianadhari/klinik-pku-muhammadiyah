@@ -72,7 +72,8 @@
                                                 <label for="tanggal_mulai" class="text-lg font-bold">Tanggal Mulai</label>
                                                 <input type="date" name="tanggal_mulai"
                                                     class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full"
-                                                    id="tanggal_mulai" required max={{ Carbon::now()->format('Y-m-d') }} value="2024-08-20">
+                                                    id="tanggal_mulai" required max={{ Carbon::now()->format('Y-m-d') }}
+                                                    value="2024-08-20">
                                             </div>
                                             <div>
                                                 <label for="tanggal_berakhir" class="text-lg font-bold">Tanggal
@@ -103,8 +104,8 @@
                                                 </div>
                                                 <select class="select border-[#A6C3BA] border-2" name="poli" required>
                                                     <option value="Semua" selected>Semua</option>
-                                                    @foreach($polies as $poly)
-                                                    <option value="{{ $poly->poli }}">{{ $poly->poli }}</option>
+                                                    @foreach ($polies as $poly)
+                                                        <option value="{{ $poly->poli }}">{{ $poly->poli }}</option>
                                                     @endforeach
                                                 </select>
                                             </label>
@@ -116,7 +117,8 @@
                                                     required>
                                                     <option value="Semua" selected>Semua</option>
                                                     @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->tenaga_medis }}">{{ $doctor->tenaga_medis }}</option>
+                                                        <option value="{{ $doctor->tenaga_medis }}">
+                                                            {{ $doctor->tenaga_medis }}</option>
                                                     @endforeach
                                                 </select>
                                             </label>
@@ -131,9 +133,11 @@
                                                 <p class="text-lg font-bold">Jenis Laporan</p>
                                                 <div class="p-6 rounded-lg border-2 mt-2 border-[#A6C3BA]">
                                                     <div>
-                                                        <input type="radio" name="jenis_laporan" id="jenis_laporan_rinci" value="Rinci" required>
+                                                        <input type="radio" name="jenis_laporan"
+                                                            id="jenis_laporan_rinci" value="Rinci" required>
                                                         <label for="jenis_laporan_rinci" class="me-1">Rinci</label>
-                                                        <input type="radio" name="jenis_laporan" id="jenis_laporan_rekap" value="Rekap">
+                                                        <input type="radio" name="jenis_laporan"
+                                                            id="jenis_laporan_rekap" value="Rekap">
                                                         <label for="jenis_laporan_rekap">Rekap</label>
                                                     </div>
                                                 </div>
@@ -142,9 +146,11 @@
                                                 <p class="text-lg font-bold">For Accounting</p>
                                                 <div class="p-6 rounded-lg border-2 mt-2 border-[#A6C3BA]">
                                                     <div>
-                                                        <input type="radio" name="jenis_laporan" id="for_accounting_rinci" value="Accounting Rinci">
+                                                        <input type="radio" name="jenis_laporan"
+                                                            id="for_accounting_rinci" value="Accounting Rinci">
                                                         <label for="for_accounting_rinci" class="me-1">Rinci</label>
-                                                        <input type="radio" name="jenis_laporan" id="for_accounting_rekap" value="Accounting Rekap">
+                                                        <input type="radio" name="jenis_laporan"
+                                                            id="for_accounting_rekap" value="Accounting Rekap">
                                                         <label for="for_accounting_rekap">Rekap</label>
                                                     </div>
                                                 </div>
@@ -158,8 +164,9 @@
                                                 required>
                                                 <option value="Semua">Semua</option>
                                                 <option value="Tunai Langsung">Tunai Langsung</option>
-                                                <option value="BPJS">BPJS</option>
-                                                <option value="Yayasan Insantama Perusahaan">Yayasan Insantama Perusahaan</option>
+                                                <option value="BPJS Kesehatan">BPJS</option>
+                                                <option value="Yayasan Insantama Perusahaan">Yayasan Insantama Perusahaan
+                                                </option>
                                             </select>
                                         </label>
                                         <label class="form-control w-full max-w-xs">
@@ -170,7 +177,8 @@
                                                 required>
                                                 <option value="Semua">Semua</option>
                                                 @foreach ($responsibles as $responsible)
-                                                <option value="{{ $responsible->penanggung_jawab }}">{{ $responsible->penanggung_jawab }}</option>
+                                                    <option value="{{ $responsible->penanggung_jawab }}">
+                                                        {{ $responsible->penanggung_jawab }}</option>
                                                 @endforeach
                                             </select>
                                         </label>
@@ -178,18 +186,18 @@
                                 </div>
                             </div>
                             <div class="flex items-center justify-center space-x-8">
-                                <button type="submit" class="px-9 py-4 rounded-md shadow border text-[#21A366]">
+                                <button type="submit" name="action" value="excel" class="px-9 py-4 rounded-md shadow border text-[#21A366]">
                                     <div class="flex space-x-2 items-center">
                                         <img src="{{ asset('excel.png') }}" alt="">
                                         <span>Create Excel</span>
                                     </div>
                                 </button>
-                                {{-- <button type="submit" class="px-9 py-4 rounded-md shadow border text-[#DD2025]">
-                                <div class="flex space-x-2 items-center">
-                                    <img src="{{ asset('pdf.png') }}" alt="">
-                                    <span>Create PDF</span>
-                                </div>
-                            </button> --}}
+                                <button type="submit" name="action" value="pdf" class="px-9 py-4 rounded-md shadow border text-[#DD2025]">
+                                    <div class="flex space-x-2 items-center">
+                                        <img src="{{ asset('pdf.png') }}" alt="">
+                                        <span>Create PDF</span>
+                                    </div>
+                                </button>
                             </div>
                         </form>
                     </div>

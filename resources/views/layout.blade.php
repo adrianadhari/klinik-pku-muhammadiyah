@@ -11,6 +11,7 @@
 
 <body>
     <div class="min-h-screen flex flex-col">
+        @include('sweetalert::alert')
         @include('navbar')
         @yield('content')
     </div>
