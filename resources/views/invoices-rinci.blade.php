@@ -120,6 +120,7 @@
                 $grandTotalTerbayar = 0;
                 $grandTotalSisaHutang = 0;
                 $grandTotalPasien = 0;
+                $lastPoli = null;
             @endphp
             @foreach ($invoices->groupBy('poli') as $poli => $data_poli)
                 @php
@@ -129,22 +130,23 @@
                     $subtotalSisaHutang = 0;
                     $totalPasienPoli = $data_poli->count();
                 @endphp
-                <tr>
-                    <td rowspan="{{ count($data_poli) }}">{{ $poli }}
-                    </td>
-                    @foreach ($data_poli as $index => $invoice)
-                        @if ($index > 0)
-                <tr>
-            @endif
-            <td>{{ $invoice->tenaga_medis }}</td>
-            <td>{{ $invoice->no_invoice }}</td>
-            <td>{{ $invoice->nama_pasien }}</td>
-            <td>{{ $invoice->metode_pembayaran }}</td>
-            <td>Rp. {{ $invoice->items->sum('total_harga') }}</td>
-            <td>Rp. {{ $invoice->items->sum('diskon') }}</td>
-            <td>Rp. {{ $invoice->terbayar }}</td>
-            <td>Rp. {{ $invoice->sisa_hutang }}</td>
-            <td>{{ $invoice->status }}</td>
+                @foreach ($data_poli as $index => $invoice)
+                    <tr>
+                        @if ($lastPoli !== $poli)
+                        <td>{{ $poli }}</td> <!-- Tampilkan tanggal setiap kali berubah -->
+                        @php $lastPoli = $poli; @endphp
+                    @else
+                        <td></td> <!-- Kosongkan sel jika tanggal sama -->
+                    @endif
+                    <td>{{ $invoice->tenaga_medis }}</td>
+                    <td>{{ $invoice->no_invoice }}</td>
+                    <td>{{ $invoice->nama_pasien }}</td>
+                    <td>{{ $invoice->metode_pembayaran }}</td>
+                    <td>Rp. {{ number_format($invoice->items->sum('total_harga'), 0, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($invoice->items->sum('diskon'), 0, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($invoice->terbayar, 0, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($invoice->sisa_hutang, 0, ',', '.') }}</td>
+                    <td>{{ $invoice->status }}</td>
 
             @php
                 // Hitung subtotal per poli
@@ -153,20 +155,15 @@
                 $subtotalTerbayar += $invoice->terbayar;
                 $subtotalSisaHutang += $invoice->sisa_hutang;
             @endphp
-
-            @if ($index > 0)
-                </tr>
-            @endif
             @endforeach
-            </tr>
             <tr>
                 <td colspan="3"><strong>SUBTOTAL:
                         {{ $poli }}</strong></td>
                 <td colspan="2"><b>{{ $totalPasienPoli }} Pasien</b></td>
-                <td><b>Rp. {{ $subtotalHarga }}</b></td>
-                <td><b>Rp. {{ $subtotalDiskon }}</b></td>
-                <td><b>Rp. {{ $subtotalTerbayar }}</b></td>
-                <td><b>Rp. {{ $subtotalSisaHutang }}</b></td>
+                <td><b>Rp. {{ number_format($subtotalHarga, 0, ',', '.') }}</b></td>
+                <td><b>Rp. {{ number_format($subtotalDiskon, 0, ',', '.') }}</b></td>
+                <td><b>Rp. {{ number_format($subtotalTerbayar, 0, ',', '.') }}</b></td>
+                <td><b>Rp. {{ number_format($subtotalSisaHutang, 0, ',', '.') }}</b></td>
                 <td></td>
             </tr>
 
@@ -189,9 +186,9 @@
             <td class="padding-right">Total Pasien</td>
             <td>: {{ $grandTotalPasien }} Pasien</td>
             <td class="padding-right" style="font-weight: bold">Total Harga</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalHarga }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalHarga, 0, ',', '.') }}</td>
             <td class="padding-right" style="font-weight: bold">Total Hutang</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalSisaHutang }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalSisaHutang, 0, ',', '.') }}</td>
         </tr>
         <tr>
             {{-- <td class="padding-right">Harga Tindakan</td>
@@ -199,7 +196,7 @@
             <td></td>
             <td></td>
             <td class="padding-right" style="font-weight: bold">Discount</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalDiskon, 0, ',', '.') }}</td>
             <td></td>
             <td></td>
         </tr>
@@ -209,7 +206,7 @@
             <td></td>
             <td></td>
             <td class="padding-right" style="font-weight: bold">Total Terbayar</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalTerbayar }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalTerbayar, 0, ',', '.') }}</td>
             <td></td>
             <td></td>
         </tr>

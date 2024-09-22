@@ -140,10 +140,10 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $poli }}</td>
                     <td>{{ $totalPasienPoli }}</td>
-                    <td>Rp. {{ $subtotalHarga }}</td>
-                    <td>Rp. {{ $subtotalDiskon }}</td>
-                    <td>Rp. {{ $subtotalTerbayar }}</td>
-                    <td>Rp. {{ $subtotalSisaHutang }}</td>
+                    <td>Rp. {{ number_format($subtotalHarga, 0, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($subtotalDiskon, 0, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($subtotalTerbayar, 0, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($subtotalSisaHutang, 0, ',', '.') }}</td>
                 </tr>
 
                     @php
@@ -165,9 +165,9 @@
             <td class="padding-right">Total Pasien</td>
             <td>: {{ $grandTotalPasien }} Pasien</td>
             <td class="padding-right" style="font-weight: bold">Total Harga</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalHarga }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalHarga, 0, ',', '.') }}</td>
             <td class="padding-right" style="font-weight: bold">Total Hutang</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalSisaHutang }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalSisaHutang, 0, ',', '.') }}</td>
         </tr>
         <tr>
             {{-- <td class="padding-right">Harga Tindakan</td>
@@ -175,7 +175,7 @@
             <td></td>
             <td></td>
             <td class="padding-right" style="font-weight: bold">Discount</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalDiskon, 0, ',', '.') }}</td>
             <td></td>
             <td></td>
         </tr>
@@ -185,7 +185,7 @@
             <td></td>
             <td></td>
             <td class="padding-right" style="font-weight: bold">Total Terbayar</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalTerbayar }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalTerbayar, 0, ',', '.') }}</td>
             <td></td>
             <td></td>
         </tr>

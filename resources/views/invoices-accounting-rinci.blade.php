@@ -78,6 +78,10 @@
         .padding-right {
             padding-right: 10px;
         }
+
+        tfoot {
+            display: table-footer-group;
+        }
     </style>
 </head>
 
@@ -114,68 +118,65 @@
         </thead>
         <tbody>
             @php
-                $grandTotalHarga = 0; // Inisialisasi variabel total keseluruhan
-                $grandTotalDiskon = 0; // Inisialisasi variabel total keseluruhan
+                $grandTotalHarga = 0;
+                $grandTotalDiskon = 0;
                 $grandTotalTerbayar = 0;
                 $grandTotalSisaHutang = 0;
                 $grandTotalPasien = 0;
+                $lastTanggal = null; // Tambahkan variabel untuk menyimpan tanggal terakhir
             @endphp
             @foreach ($invoices->groupBy('tanggal') as $tanggal => $data_poli)
                 @php
-                    $subtotalHarga = 0; // Variabel untuk subtotal per poli
+                    $subtotalHarga = 0;
                     $subtotalDiskon = 0;
                     $subtotalTerbayar = 0;
                     $subtotalSisaHutang = 0;
                     $totalPasienPoli = $data_poli->count();
                 @endphp
+                @foreach ($data_poli as $index => $invoice)
+                    <tr>
+                        @if ($lastTanggal !== $tanggal)
+                            <td>{{ $tanggal }}</td> <!-- Tampilkan tanggal setiap kali berubah -->
+                            @php $lastTanggal = $tanggal; @endphp
+                        @else
+                            <td></td> <!-- Kosongkan sel jika tanggal sama -->
+                        @endif
+                        <td>{{ $invoice->poli }}</td>
+                        <td>{{ $invoice->jam }}</td>
+                        <td>{{ $invoice->no_invoice }}</td>
+                        <td>Rp. {{ number_format($invoice->items->sum('total_harga'), 0, ',', '.') }}</td>
+                        <td>Rp. {{ number_format($invoice->items->sum('diskon'), 0, ',', '.') }}</td>
+                        <td>Rp. {{ $invoice->metode_pembayaran }}</td>
+                        <td>Rp. {{ number_format($invoice->terbayar, 0, ',', '.') }}</td>
+                        <td>Rp. {{ number_format($invoice->sisa_hutang, 0, ',', '.') }}</td>
+                    </tr>
+        
+                    @php
+                        $subtotalHarga += $invoice->items->sum('total_harga');
+                        $subtotalDiskon += $invoice->items->sum('diskon');
+                        $subtotalTerbayar += $invoice->terbayar;
+                        $subtotalSisaHutang += $invoice->sisa_hutang;
+                    @endphp
+                @endforeach
                 <tr>
-                    <td rowspan="{{ count($data_poli) }}">{{ $tanggal }}
-                    </td>
-                    @foreach ($data_poli as $index => $invoice)
-                        @if ($index > 0)
-                <tr>
-            @endif
-            <td>{{ $invoice->poli }}</td>
-            <td>{{ $invoice->jam }}</td>
-            <td>{{ $invoice->no_invoice }}</td>
-            <td>Rp. {{ $invoice->items->sum('total_harga') }}</td>
-            <td>Rp. {{ $invoice->items->sum('diskon') }}</td>
-            <td>Rp. {{ $invoice->metode_pembayaran }}</td>
-            <td>Rp. {{ $invoice->terbayar }}</td>
-            <td>Rp. {{ $invoice->sisa_hutang }}</td>
-
-            @php
-                // Hitung subtotal per poli
-                $subtotalHarga += $invoice->items->sum('total_harga');
-                $subtotalDiskon += $invoice->items->sum('diskon');
-                $subtotalTerbayar += $invoice->terbayar;
-                $subtotalSisaHutang += $invoice->sisa_hutang;
-            @endphp
-
-            @if ($index > 0)
+                    <td colspan="4"><strong>SUBTOTAL</strong></td>
+                    <td><b>Rp. {{ number_format($subtotalHarga, 0, ',', '.') }}</b></td>
+                    <td><b>Rp. {{ number_format($subtotalDiskon, 0, ',', '.') }}</b></td>
+                    <td></td>
+                    <td><b>Rp. {{ number_format($subtotalTerbayar, 0, ',', '.') }}</b></td>
+                    <td><b>Rp. {{ number_format($subtotalSisaHutang, 0, ',', '.') }}</b></td>
                 </tr>
-            @endif
-            @endforeach
-            </tr>
-            <tr>
-                <td colspan="4"><strong>SUBTOTAL</strong></td>
-                <td><b>: Rp. {{ $subtotalHarga }}</b></td>
-                <td><b>Rp. {{ $subtotalDiskon }}</b></td>
-                <td></td>
-                <td><b>Rp. {{ $subtotalTerbayar }}</b></td>
-                <td><b>Rp. {{ $subtotalSisaHutang }}</b></td>
-            </tr>
-
-            @php
-                // Tambahkan subtotal poli ke total keseluruhan
-                $grandTotalHarga += $subtotalHarga;
-                $grandTotalDiskon += $subtotalDiskon;
-                $grandTotalTerbayar += $subtotalTerbayar;
-                $grandTotalSisaHutang += $subtotalSisaHutang;
-                $grandTotalPasien += $totalPasienPoli;
-            @endphp
+        
+                @php
+                    $grandTotalHarga += $subtotalHarga;
+                    $grandTotalDiskon += $subtotalDiskon;
+                    $grandTotalTerbayar += $subtotalTerbayar;
+                    $grandTotalSisaHutang += $subtotalSisaHutang;
+                    $grandTotalPasien += $totalPasienPoli;
+                @endphp
             @endforeach
         </tbody>
+        
     </table>
 
 
@@ -183,15 +184,15 @@
     <table class="table-footer">
         <tr>
             <td style="font-weight: bold">Total Harga</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalHarga }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalHarga, 0, ',', '.') }}</td>
             <td style="font-weight: bold">Total Hutang</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalSisaHutang }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalSisaHutang, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td style="font-weight: bold">Total Terbayar</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalTerbayar }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalTerbayar, 0, ',', '.') }}</td>
             <td style="font-weight: bold">Discount</td>
-            <td style="font-weight: bold">: Rp. {{ $grandTotalDiskon }}</td>
+            <td style="font-weight: bold">: Rp. {{ number_format($grandTotalDiskon, 0, ',', '.') }}</td>
         </tr>
     </table>
     <hr style="border: 1px solid black; margin: 20px 0 0 0;">

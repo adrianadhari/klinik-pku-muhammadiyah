@@ -6,10 +6,10 @@
     <div class="flex-grow container  mx-auto flex space-x-36 justify-center text-center items-center">
 
         <div class="w-1/3">
-            <h1 class="text-5xl font-bold mb-10">IMPORT FILE</h1>
+            <h1 class="text-5xl font-bold mb-4">IMPORT FILE</h1>
             <a class="cursor-pointer" onclick="my_modal_1.showModal()">
-                <div class="flex items-center flex-col justify-center p-32 bg-[#F6F9F8] space-y-6 border-dashed border">
-                    <img src="{{ asset('upload.png') }}" alt="Upload">
+                <div class="flex items-center flex-col justify-center p-8 bg-[#F6F9F8] space-y-0 border-dashed border">
+                    <img src="{{ asset('upload.png') }}" alt="Upload" class="w-2/4">
                     <p class="text-2xl font-semibold">Upload files <span class="text-[#483EA8] underline">here</span></p>
                 </div>
             </a>
@@ -38,10 +38,10 @@
         </div>
 
         <div class="w-1/3">
-            <h1 class="text-5xl font-bold mb-10">CREATE REPORT</h1>
+            <h1 class="text-5xl font-bold mb-4">CREATE REPORT</h1>
             <a class="cursor-pointer" onclick="my_modal_2.showModal()">
-                <div class="flex items-center flex-col justify-center p-32 bg-[#F6F9F8] space-y-6 border-dashed border">
-                    <img src="{{ asset('report.png') }}" alt="Upload">
+                <div class="flex items-center flex-col justify-center p-8 bg-[#F6F9F8] space-y-0 border-dashed border">
+                    <img src="{{ asset('report.png') }}" alt="Upload" class="w-2/4">
                     <p class="text-2xl font-semibold">Create report <span class="text-[#483EA8] underline">here</span></p>
                 </div>
             </a>
@@ -52,7 +52,7 @@
                     </form>
                     <div class="flex flex-col space-y-4 px-8">
                         <h1 class="text-4xl font-bold">Create Daily Report</h1>
-                        <form action="{{ route('export') }}" method="POST">
+                        <form action="{{ route('export') }}" method="POST" target="_blank">
                             @csrf
                             <div class="p-6 flex space-x-14">
                                 <div class="w-1/2">
@@ -80,7 +80,7 @@
                                                     Berakhir</label>
                                                 <input type="date" name="tanggal_berakhir" id="tanggal_berakhir"
                                                     class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full" required
-                                                    max={{ Carbon::now()->format('Y-m-d') }} value="2024-08-20">
+                                                    max={{ Carbon::now()->format('Y-m-d') }} value="2024-08-24">
                                             </div>
                                         </div>
                                         <div class="flex items-center text-start space-x-4">

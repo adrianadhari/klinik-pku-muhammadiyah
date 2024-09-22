@@ -6,15 +6,29 @@ use App\Models\Invoice;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class InvoicesExport implements FromQuery, WithHeadings, ShouldAutoSize, WithStyles
+class InvoicesExport implements FromQuery, WithHeadings, ShouldAutoSize, WithStyles, WithEvents, WithColumnFormatting
 {
     /**
      * @return \Illuminate\Support\Collection
      */
+
+
+     public function columnFormats(): array
+     {
+         return [
+             // Misalkan kolom total harga di kolom F, diskon di kolom G, terbayar di kolom H, dan sisa hutang di kolom I
+             'J' => '"Rp" #,##0', // Total Harga
+             'K' => '"Rp" #,##0', // Diskon
+         ];
+     }
 
     public function headings(): array
     {
@@ -25,6 +39,7 @@ class InvoicesExport implements FromQuery, WithHeadings, ShouldAutoSize, WithSty
             'Jam',
             'Tenaga Medis',
             'Poli',
+            'Nama Pasien',
             'Metode Pembayaran',
             'Status',
             'Terbayar',
@@ -114,5 +129,33 @@ class InvoicesExport implements FromQuery, WithHeadings, ShouldAutoSize, WithSty
         }
 
         return $query;
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                // Menyimpan total "Terbayar"
+                $invoices = $this->query()->get();
+                $totalTerbayar = $invoices->sum('terbayar');
+
+                // Menentukan baris di mana total akan ditambahkan (misal di baris setelah semua data)
+                $lastRow = $invoices->count() + 2; // +1 untuk header, +1 untuk total row
+
+                // Menambahkan total di kolom 'Terbayar' (misal di kolom I, tergantung kolom terbayar)
+                $event->sheet->setCellValue('I' . $lastRow, 'Total Terbayar');
+                $event->sheet->setCellValue('J' . $lastRow, $totalTerbayar);
+
+                $event->sheet->getStyle('J' . $lastRow)->getNumberFormat()
+                    ->setFormatCode('"Rp" #,##0');
+                
+                // Bold pada baris total
+                $event->sheet->getStyle('I' . $lastRow . ':J' . $lastRow)->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                    ],
+                ]);
+            }
+        ];
     }
 }
