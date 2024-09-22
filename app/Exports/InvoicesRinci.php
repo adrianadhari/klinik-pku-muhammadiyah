@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class InvoicesAccountingRinci implements FromView, ShouldAutoSize
+class InvoicesRinci implements FromView, ShouldAutoSize
 {
     protected $invoices;
     protected $status;
@@ -39,7 +39,8 @@ class InvoicesAccountingRinci implements FromView, ShouldAutoSize
     public function view(): View
     {
 
-        return view('excel.invoices-accounting-rinci', [
+        // Mengirim data ke view 'excel.invoices-rekap'
+        return view('excel.invoices-rinci', [
             'invoices' => $this->invoices,
             'status' => $this->status,
             'tanggal_mulai' => $this->tanggal_mulai,

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\InvoicesExport;
+use App\Exports\InvoicesAccountingRekap;
+use App\Exports\InvoicesAccountingRinci;
+use App\Exports\InvoicesRinci;
+use App\Exports\InvoicesRekap;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Imports\UsersImport;
 use App\Models\Invoice;
@@ -101,10 +104,25 @@ class DashboardController extends Controller
         // Dapatkan hasil query
         $invoices = $query->get();
 
+        $data = [
+            'invoices' => $invoices,
+            'status' => $status,
+            'tanggal_mulai' => $tanggal_mulai,
+            'tanggal_berakhir' => $tanggal_berakhir,
+            'jam_mulai' => $jam_mulai,
+            'jam_selesai' => $jam_selesai,
+            'poli' => $poli,
+            'tenaga_medis' => $tenaga_medis,
+            'metode_pembayaran' => $metode_pembayaran,
+            'penanggung_jawab' => $penanggung_jawab,
+            'jenis_laporan' => $jenis_laporan
+        ];
 
-        if ($request->input('action') == 'excel') {
-            return Excel::download(
-                new InvoicesExport(
+        switch ($jenis_laporan) {
+            case 'Rinci':
+                $view = 'invoices-rinci';
+                $exportClass = new InvoicesRinci(
+                    $invoices,
                     $status,
                     $tanggal_mulai,
                     $tanggal_berakhir,
@@ -113,50 +131,69 @@ class DashboardController extends Controller
                     $poli,
                     $tenaga_medis,
                     $metode_pembayaran,
-                    $penanggung_jawab
-                ),
-                'Invoice-' . Carbon::now()->timestamp . '.xlsx'
-            );
-        } elseif ($request->input('action') == 'pdf') {
-            // Pilih template berdasarkan jenis laporan
-            switch ($jenis_laporan) {
-                case 'Rinci':
-                    $view = 'invoices-rinci';
-                    break;
-                case 'Rekap':
-                    $view = 'invoices-rekap';
-                    break;
-                case 'Accounting Rinci':
-                    $view = 'invoices-accounting-rinci';
-                    break;
-                case 'Accounting Rekap':
-                    $view = 'invoices-accounting-rekap';
-                    break;
-                default:
-                    $view = 'invoices-default';
-                    break;
-            }
-
-            // Siapkan data yang akan dikirim ke view
-            $data = [
-                'invoices' => $invoices,
-                'status' => $status,
-                'tanggal_mulai' => $tanggal_mulai,
-                'tanggal_berakhir' => $tanggal_berakhir,
-                'jam_mulai' => $jam_mulai,
-                'jam_selesai' => $jam_selesai,
-                'poli' => $poli,
-                'tenaga_medis' => $tenaga_medis,
-                'metode_pembayaran' => $metode_pembayaran,
-                'penanggung_jawab' => $penanggung_jawab,
-                'jenis_laporan' => $jenis_laporan
-            ];
-
-            // Generate PDF dari view yang dipilih
-            $pdf = PDF::loadView($view, $data);
-            $pdf->setPaper('a4', 'landscape');
-            return $pdf->stream();
-            // return $pdf->download('Invoice-' . Carbon::now()->timestamp . '.pdf');
+                    $penanggung_jawab,
+                    $jenis_laporan,
+                );
+                break;
+            case 'Rekap':
+                $view = 'invoices-rekap';
+                $exportClass = new InvoicesRekap(
+                    $invoices,
+                    $status,
+                    $tanggal_mulai,
+                    $tanggal_berakhir,
+                    $jam_mulai,
+                    $jam_selesai,
+                    $poli,
+                    $tenaga_medis,
+                    $metode_pembayaran,
+                    $penanggung_jawab,
+                    $jenis_laporan,
+                );
+                break;
+            case 'Accounting Rinci':
+                $view = 'invoices-accounting-rinci';
+                $exportClass = new InvoicesAccountingRinci(
+                    $invoices,
+                    $status,
+                    $tanggal_mulai,
+                    $tanggal_berakhir,
+                    $jam_mulai,
+                    $jam_selesai,
+                    $poli,
+                    $tenaga_medis,
+                    $metode_pembayaran,
+                    $penanggung_jawab,
+                    $jenis_laporan,
+                );
+                break;
+            case 'Accounting Rekap':
+                $view = 'invoices-accounting-rekap';
+                $exportClass = new InvoicesAccountingRekap(
+                    $invoices,
+                    $status,
+                    $tanggal_mulai,
+                    $tanggal_berakhir,
+                    $jam_mulai,
+                    $jam_selesai,
+                    $poli,
+                    $tenaga_medis,
+                    $metode_pembayaran,
+                    $penanggung_jawab,
+                    $jenis_laporan,
+                );
+                break;
         }
+
+        // Export Excel
+        if ($request->input('action') == 'excel') {
+            return Excel::download($exportClass, 'Invoice-' . $jenis_laporan . '-' . Carbon::now()->setTimezone('Asia/Jakarta')->toDateTimeString() . '.xlsx');
+        }
+
+        // Export PDF
+        $pdf = PDF::loadView($view, $data);
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->stream();
+
     }
 }
