@@ -15,6 +15,6 @@ class ItemInvoice extends Model
     public $timestamps = false;
 
     public function invoice(): BelongsTo {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Invoice::class, 'invoice_no', 'no_invoice');
     }
 }

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('jumlah')->nullable()->default(0);
             $table->unsignedBigInteger('diskon')->nullable()->default(0);
             $table->unsignedBigInteger('total_harga')->nullable()->default(0);
-            $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnDelete();
+            $table->string('invoice_no');
+            $table->foreign('invoice_no')->references('no_invoice')->on('invoices')->cascadeOnDelete();
             $table->timestamps();
         });
     }

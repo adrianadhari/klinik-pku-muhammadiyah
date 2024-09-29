@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
-            $table->string('no_invoice');
+            $table->string('no_invoice')->primary()->unique();
             $table->date('tanggal');
             $table->time('jam');
             $table->string('tenaga_medis');

@@ -16,7 +16,7 @@ class UsersImport implements ToCollection, WithHeadingRow
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-
+    public $duplicateCount = 0;
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
@@ -40,15 +40,29 @@ class UsersImport implements ToCollection, WithHeadingRow
                 ]
             );
 
-            // Simpan item terkait (asumsi ada kolom yang menunjukkan item barang/jasa di invoice)
-            ItemInvoice::create([
-                'invoice_id' => $invoice->id,  // Mengaitkan item dengan invoice yang sesuai
-                'deskripsi' => $row['obat'] . ' - ' . $row['prosedur'],  // Nama barang/jasa yang ada dalam invoice
-                'harga' => $harga,
-                'jumlah' => $row['jumlah'],
-                'diskon' => $row['diskon'],
-                'total_harga' => $total_harga,
-            ]);
+            // Cek apakah item sudah ada di tabel item_invoices
+            $existingItem = ItemInvoice::where('invoice_no', $invoice->no_invoice)
+                ->where('deskripsi', $row['obat'] . ' - ' . $row['prosedur']) // Atau field yang relevan untuk menentukan unik
+                ->where('harga', $harga)
+                ->where('jumlah', $row['jumlah'])
+                ->where('diskon', $row['diskon'])
+                ->where('total_harga', $total_harga)
+                ->first();
+
+            // Jika item sudah ada, tambahkan counter duplikasi
+            if ($existingItem) {
+                $this->duplicateCount++; // Increment jumlah duplikasi
+            } else {
+                // Jika item belum ada, baru kita insert
+                ItemInvoice::create([
+                    'invoice_no' => $invoice->no_invoice,  // Mengaitkan item dengan invoice yang sesuai
+                    'deskripsi' => $row['obat'] . ' - ' . $row['prosedur'],  // Nama barang/jasa yang ada dalam invoice
+                    'harga' => $harga,
+                    'jumlah' => $row['jumlah'],
+                    'diskon' => $row['diskon'],
+                    'total_harga' => $total_harga,
+                ]);
+            }
         }
     }
 }

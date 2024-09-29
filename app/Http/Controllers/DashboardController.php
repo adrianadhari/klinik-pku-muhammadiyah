@@ -40,9 +40,17 @@ class DashboardController extends Controller
 
         // Jika file berhasil diupload dan valid, lanjutkan proses import
         if ($request->file('file')->isValid()) {
-            Excel::import(new UsersImport, $request->file('file'));
+            // Lakukan proses import dan dapatkan hasil duplikasi dari UsersImport
+            $import = new UsersImport;
+            Excel::import($import, $request->file('file'));
 
-            Alert::success('Success', 'Your file has been uploaded and imported to the database');
+            // Jika tidak ada duplikasi, tampilkan alert success
+            if ($import->duplicateCount == 0) {
+                Alert::success('Success', 'Your file has been uploaded and imported to the database');
+            } else {
+                // Jika ada duplikasi, tampilkan alert warning dengan jumlah duplikasi
+                Alert::warning('Warning', 'File imported, but ' . $import->duplicateCount . ' duplicate(s) were found and ignored.');
+            }
         } else {
             Alert::error('Error', 'The file upload failed. Please try again.');
         }
@@ -194,6 +202,5 @@ class DashboardController extends Controller
         $pdf = PDF::loadView($view, $data);
         $pdf->setPaper('a4', 'landscape');
         return $pdf->stream();
-
     }
 }
