@@ -49,7 +49,7 @@ class DashboardController extends Controller
                 Alert::success('Success', 'Your file has been uploaded and imported to the database');
             } else {
                 // Jika ada duplikasi, tampilkan alert warning dengan jumlah duplikasi
-                Alert::warning('success', 'File imported, but ' . $import->duplicateCount . ' duplicate(s) were found and ignored.');
+                Alert::success('success', 'File imported, but ' . $import->duplicateCount . ' duplicate(s) were found and ignored.');
             }
         } else {
             Alert::error('Error', 'The file upload failed. Please try again.');
