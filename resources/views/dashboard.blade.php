@@ -64,7 +64,7 @@
                                             <select class="select border-[#A6C3BA] border-2" name="status" required>
                                                 <option value="Semua" selected>Semua</option>
                                                 <option value="Lunas">Lunas</option>
-                                                <option value="Belum Lunas">Belum Lunas</option>
+                                                <option value="Belum Dibayar">Belum Dibayar</option>
                                             </select>
                                         </label>
                                         <div class="flex items-center text-start space-x-4">

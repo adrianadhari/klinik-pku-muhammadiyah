@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('poli');
             $table->string('nama_pasien');
             $table->string('metode_pembayaran')->nullable();
-            $table->enum('status', ['Lunas', 'Belum Lunas'])->nullable();
+            $table->enum('status', ['Lunas', 'Belum Dibayar'])->nullable();
             $table->unsignedBigInteger('terbayar')->nullable();
             $table->unsignedBigInteger('sisa_hutang')->nullable();
             $table->string('penanggung_jawab')->nullable();
