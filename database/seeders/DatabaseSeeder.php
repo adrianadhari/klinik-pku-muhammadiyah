@@ -14,10 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'username' => 'admin',
-            'password' => Hash::make('admin')
-        ]);
+        $user = User::where('username', 'admin')->first();
+        if ($user) {
+            $user->update([
+                'password' => Hash::make('123123')
+            ]);
+        } else {
+            User::create([
+                'name' => 'Admin',
+                'username' => 'admin',
+                'password' => Hash::make('admin')
+            ]);
+        }
     }
 }
