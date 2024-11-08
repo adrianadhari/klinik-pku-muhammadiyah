@@ -29,7 +29,7 @@ class DashboardController extends Controller
     {
         // Validasi file terlebih dahulu
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:xlsx,xls,csv|max:10240', // Batas ukuran file 10MB
+            'file' => 'required|mimes:zip,xlsx,xls,csv|max:10240', // Batas ukuran file 10MB
         ]);
 
         // Jika validasi gagal, redirect dengan error message

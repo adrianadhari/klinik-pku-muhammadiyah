@@ -73,14 +73,14 @@
                                                 <input type="date" name="tanggal_mulai"
                                                     class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full"
                                                     id="tanggal_mulai" required max={{ Carbon::now()->format('Y-m-d') }}
-                                                    value="2024-08-20">
+                                                    value="{{ Carbon::now()->format('Y-m-d') }}">
                                             </div>
                                             <div>
                                                 <label for="tanggal_berakhir" class="text-lg font-bold">Tanggal
                                                     Berakhir</label>
                                                 <input type="date" name="tanggal_berakhir" id="tanggal_berakhir"
                                                     class="border-2 mt-2 rounded-lg p-3 border-[#A6C3BA] w-full" required
-                                                    max={{ Carbon::now()->format('Y-m-d') }} value="2024-08-24">
+                                                    max={{ Carbon::now()->format('Y-m-d') }} value="{{ Carbon::now()->format('Y-m-d') }}">
                                             </div>
                                         </div>
                                         <div class="flex items-center text-start space-x-4">
